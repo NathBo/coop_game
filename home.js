@@ -95,4 +95,6 @@ function main(){
 
 	var functiontoexecute = loop;
 	globalloop();
+	var map = read_map(map1);
+	console.log(map);
 }
