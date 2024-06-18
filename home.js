@@ -9,7 +9,8 @@ function main(){
 	}
 
 	function affichtt(){
-
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,500);
 	}
 	
 	function loop(){
