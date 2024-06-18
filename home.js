@@ -11,6 +11,23 @@ function main(){
 	function affichtt(){
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
+		for (var player=0; player<2; player++){
+			for(var i=-vision_range;i<=vision_range;i++){
+				for(var j=-vision_range;j<=vision_range;j++){
+					console.log(niveau0[Math.round(camerax)+i][Math.round(cameray)+j]=='1');
+					if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
+						ctx.fillStyle = "brown";
+						ctx.fillRect(centers[player][0]+i*block_size,centers[player][1]+j*block_size,block_size,block_size)
+					}
+				}
+			}
+		}
+		ctx.fillStyle = "gray";
+		ctx.fillRect(0,0,1024,64);
+		ctx.fillRect(0,576-64,1024,64);
+		ctx.fillRect(0,0,12,576);
+		ctx.fillRect(1024-12,0,12,576);
+		ctx.fillRect(500,0,24,576);
 	}
 	
 	function loop(){
@@ -34,6 +51,25 @@ function main(){
 	ctx.imageSmoothingEnabled = false;
 	var frame_delay = 16;
 	var decalage = 0; var wdecalagey = 0;
+	var camerax = 4; var cameray = 4;
+	var vision_range = 4; var block_size = 64; var realvisonrange = 448;
+	var centers = [[256,234],[768,234]];
+	var niveau0 = ["000010001111001",
+				   "110111001110001",
+				   "001100011100001",
+				   "110110001000001",
+				   "110110001000001",
+				   "110110001000001",
+				   "110110001000001",
+				   "110110001000001",
+				   "001100011100001",
+				   "001100011100001",
+				   "001100011100001"
+	]
+
+	var niveau1 = niveau0;
+
+	var niveaux = [niveau0,niveau1];
 
 	
 
