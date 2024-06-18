@@ -11,13 +11,14 @@ function main(){
 	function affichtt(){
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		for (var player=0; player<2; player++){
+		for (var player=1; player>=0; player--){
 			for(var i=-vision_range;i<=vision_range;i++){
 				for(var j=-vision_range;j<=vision_range;j++){
-					console.log(niveau0[Math.round(camerax)+i][Math.round(cameray)+j]=='1');
 					if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
 						ctx.fillStyle = "brown";
-						ctx.fillRect(centers[player][0]+i*block_size,centers[player][1]+j*block_size,block_size,block_size)
+						let x = centers[player][0]+i*block_size;
+						let y = centers[player][1]+j*block_size;
+						ctx.fillRect(x,y,Math.min(block_size,centers[player][0]+realvisonrange/2-x),block_size)
 					}
 				}
 			}
@@ -54,12 +55,12 @@ function main(){
 	var camerax = 4; var cameray = 4;
 	var vision_range = 4; var block_size = 64; var realvisonrange = 448;
 	var centers = [[256,234],[768,234]];
-	var niveau0 = ["000010001111001",
-				   "110111001110001",
+	var niveau0 = ["000000000000000",
+				   "110111111110001",
 				   "001100011100001",
 				   "110110001000001",
 				   "110110001000001",
-				   "110110001000001",
+				   "110100101000001",
 				   "110110001000001",
 				   "110110001000001",
 				   "001100011100001",
