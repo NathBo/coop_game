@@ -14,11 +14,12 @@ function main(){
 		for (var player=1; player>=0; player--){
 			for(var i=-vision_range;i<=vision_range;i++){
 				for(var j=-vision_range;j<=vision_range;j++){
-					if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
+					if(Math.floor(camerax)+i<0 || Math.round(cameray)+j<0){}
+					else if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
 						ctx.fillStyle = "brown";
-						let x = centers[player][0]+i*block_size;
-						let y = centers[player][1]+j*block_size;
-						ctx.fillRect(x,y,Math.min(block_size,centers[player][0]+realvisonrange/2-x),block_size)
+						let x = centers[player][0]+(Math.round(camerax)+i-camerax)*block_size;
+						let y = centers[player][1]+(Math.round(cameray)+j-cameray)*block_size;
+						ctx.fillRect(x,y,Math.min(block_size+1,centers[player][0]+realvisonrange/2-x),block_size+1)
 					}
 				}
 			}
@@ -33,6 +34,10 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
+		if(gauche){camerax-=0.1;}
+		if(droite){camerax+=0.1;}
+		if(haut){cameray-=0.1;}
+		if(bas){cameray+=0.1;}
 		affichtt();
 	}
 
@@ -52,8 +57,8 @@ function main(){
 	ctx.imageSmoothingEnabled = false;
 	var frame_delay = 16;
 	var decalage = 0; var wdecalagey = 0;
-	var camerax = 4; var cameray = 4;
-	var vision_range = 4; var block_size = 64; var realvisonrange = 448;
+	var camerax = 5; var cameray = 4;
+	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
 	var centers = [[256,234],[768,234]];
 	var niveau0 = ["000000000000000",
 				   "110111111110001",
@@ -65,6 +70,10 @@ function main(){
 				   "110110001000001",
 				   "001100011100001",
 				   "001100011100001",
+				   "001100011100001",
+				   "110110001000001",
+				   "001100011100001",
+				   "001100011100001",
 				   "001100011100001"
 	]
 
@@ -72,7 +81,9 @@ function main(){
 
 	var niveaux = [niveau0,niveau1];
 
-	
+	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","KeyD","KeyA","KeyW","KeyS","KeyR","KeyT"];
+
+	var gauche=0; var droite = 0; var haut = 0; var bas = 0;	
 
 
 	function logKey(e) {
