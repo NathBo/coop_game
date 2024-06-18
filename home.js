@@ -2,15 +2,15 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>Width*500/1024){Height=Width*500/1024;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
-		  else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
+		  if(Height>Width*576/1024){Height=Width*576/1024;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
+		  else if(Width*576/1024>Height){Width=Height/576*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
 
 	function affichtt(){
 		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,500);
+		ctx.fillRect(0,0,1024,576);
 	}
 	
 	function loop(){
