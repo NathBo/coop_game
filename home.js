@@ -31,6 +31,8 @@ function main(){
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
+	var frame_delay = 16;
+	var decalage = 0; var wdecalagey = 0;
 
 	
 
