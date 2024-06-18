@@ -2,7 +2,8 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>=Width*6/9){Heigth=Width*6/9;canvas.style.left = "0px";}else if(Width*6/9>Height){Width=Height/6*9;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
+		  if(Height>Width*500/1024){Height=Width*500/1024;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
+		  else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
@@ -14,6 +15,11 @@ function main(){
 	function loop(){
 		resizecanvas();
 		affichtt();
+	}
+
+	function globalloop(){
+		setTimeout(globalloop,frame_delay);
+		functiontoexecute();
 	}
 
 	var canvas = document.getElementById("canvas");
@@ -35,14 +41,14 @@ function main(){
 		if(e.code==controls[2]&&haut==0){haut=1}
 		if(e.code==controls[3]&&bas==0){bas=1}
 		if(e.code==controls[4]&&espace==0){espace=1}
-		if(e.code==controls[5]&&back==0){back=1}
+		if(e.code==controls[5]&&item==0){item=1}
 		if(e.code==controls[6]&&start==0){start=1}
 		if(e.code==controls[7]&&droite2==0){droite2=1}
 		if(e.code==controls[8]&&gauche2==0){gauche2=1}
 		if(e.code==controls[9]&&haut2==0){haut2=1}
 		if(e.code==controls[10]&&bas2==0){bas2=1}
 		if(e.code==controls[11]&&espace2==0){espace2=1}
-		if(e.code==controls[12]&&back2==0){back2=1}
+		if(e.code==controls[12]&&item2==0){item2=1}
 		key=e.code;
 	}
 	function unlogKey(e){
@@ -51,14 +57,14 @@ function main(){
 		else if(e.code==controls[2]){haut=0}
 		else if(e.code==controls[3]){bas=0}
 		else if(e.code==controls[4]){espace=0}
-		else if(e.code==controls[5]){back=0}
+		else if(e.code==controls[5]){item=0}
 		else if(e.code==controls[6]){start=0}
 		if(e.code==controls[7]){droite2=0}
 		if(e.code==controls[8]){gauche2=0}
 		if(e.code==controls[9]){haut2=0}
 		if(e.code==controls[10]){bas2=0}
 		if(e.code==controls[11]){espace2=0}
-		if(e.code==controls[12]){back2=0}
+		if(e.code==controls[12]){item2=0}
 	}
 	function clickEvent(e){
 		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;click=1;
@@ -76,7 +82,7 @@ function main(){
 			else if(entre(touches[i].pageX,0.16,0.26)){droite=1}
 			else if(entre(touches[i].pageX,0.88,0.98)){espace=1}
 			else if(entre(touches[i].pageX,0.76,0.86)){haut=1}
-			else if(entre(touches[i].pageX,0.64,0.74)){back=1}
+			else if(entre(touches[i].pageX,0.64,0.74)){item=1}
 		}
 	}
 	document.addEventListener('keydown', logKey);
@@ -84,5 +90,6 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	var timer  = setInterval(loop,33)
+	var functiontoexecute = loop;
+	globalloop();
 }
