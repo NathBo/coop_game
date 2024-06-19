@@ -47,33 +47,48 @@ function main(){
 		}
 	}
 
-
-
-	function affichtt(){
-		for (var player=1; player>=0; player--){
-			for(var i=-vision_range+1;i<=vision_range;i++){
-				for(var j=-vision_range+1;j<=vision_range;j++){
-					let x = centers[player][0]+(Math.round(camerax[player])+i-camerax[player])*block_size-block_size/2;
-					let y = centers[player][1]+(Math.round(cameray[player])+j-cameray[player])*block_size-block_size/2;
-					let w = Math.min(block_size+1,centers[player][0]+realvisonrange/2-x+block_size/2);
-					if(w<=0){}
-					else if(Math.round(camerax[player])+i<0 || Math.round(cameray[player])+j<0 || Math.round(camerax[player])+i>=niveaux[player].length){
-						ctx.fillStyle = "black";
-						ctx.fillRect(x,y,w,block_size+1);
-					}
-					else if(niveaux[player][Math.round(camerax[player])+i][Math.round(cameray[player])+j]=='#'){
-						ctx.fillStyle = "brown";
-						ctx.fillRect(x,y,w,block_size+1)
+	function afficherplayer(player){
+		for(var i=-vision_range+1;i<=vision_range;i++){
+			for(var j=-vision_range+1;j<=vision_range;j++){
+				let x = centers[player][0]+(Math.round(camerax[player])+i-camerax[player])*block_size-block_size/2;
+				let y = centers[player][1]+(Math.round(cameray[player])+j-cameray[player])*block_size-block_size/2;
+				let w = Math.min(block_size+1,centers[player][0]+realvisonrange/2-x+block_size/2);
+				if(w<=0){}
+				else if(Math.round(camerax[player])+i<0 || Math.round(cameray[player])+j<0 || Math.round(camerax[player])+i>=niveaux[player].length){
+					if (player==0){
+						ctx.fillStyle = "white";
 					}
 					else{
 						ctx.fillStyle = "black";
-						ctx.fillRect(x,y,w,block_size+1);
 					}
+					ctx.fillRect(x,y,w,block_size+1);
+				}
+				else if(niveaux[player][Math.round(camerax[player])+i][Math.round(cameray[player])+j]=='#'){
+					ctx.fillStyle = "brown";
+					ctx.fillRect(x,y,w,block_size+1)
+				}
+				else{
+					if (player==0){
+						ctx.fillStyle = "white";
+					}
+					else{
+						ctx.fillStyle = "black";
+					}
+					ctx.fillRect(x,y,w,block_size+1);
 				}
 			}
 		}
-		j1.afficher();
-		j2.afficher();
+		if(player==0){j1.afficher();}
+		else{j2.afficher();}
+	}
+
+
+
+	function affichtt(){
+		for (var player=0; player<2; player++){
+			afficherplayer(player);
+		}
+		
 		ctx.fillStyle = "gray";
 		ctx.fillRect(0,0,1024,64);
 		ctx.fillRect(0,576-64,1024,64);
@@ -107,7 +122,7 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
-	var centers = [[256,288],[768,288]];
+	var centers = [[768,288],[256,288]];
 	var player_size = 20;
 
 	var niveaux = [];
