@@ -28,6 +28,8 @@ function read_map(map){
             map.objects[i_object].id = 'new id -> ' + i_object.toString();
         if (map.objects[i_object].effect === undefined)
             map.objects[i_object].effect = [];
+        if (map.objects[i_object].color === undefined)
+            map.objects[i_object].color = "rgb(100,100,100)";
     }
 
     return map;

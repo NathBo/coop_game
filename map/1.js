@@ -10,7 +10,7 @@ var map1 = {
             "##.##...#.....#",
             "##.##...#.....#",
             "#.##...###....#",
-            "#.##...###....#",
+            "#.##..........#",
             "#.##...###....#",
             "##.##...#.....#",
             "#.##...###....#",
@@ -41,8 +41,8 @@ var map1 = {
     "objects":[
         { "type":"exit", "player":0, "x":7, "y":1 },
         { "type":"exit", "player":1, "x":7, "y":1 },
-        { "type":"door", "player":0, "x":2, "y":1 },
-        { "type":"levier", "player":1, "x":5, "y":1, "effect":["door1"] },
+        { "type":"door", "player":0, "x":8, "y":9, "id" : "door1", "color" : "green" },
+        { "type":"levier", "player":1, "x":9, "y":11, "effect":["door1"] , "color" : "green" },
         { "type":"light", "player":1, "x":6, "y":5, "id":"light1" },
         { "type":"light", "player":0, "x":6, "y":5, "id":"light2" },
         { "type":"levier", "player":0, "x":6, "y":6, "effect":["light1","light2"] }

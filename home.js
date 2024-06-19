@@ -9,19 +9,24 @@ function main(){
 	}
 
 	function touchesblock(n,x,y){
-		return (niveaux[n][Math.floor(x+0.5)][Math.floor(y+0.5)]=='#');
+		return (collisions[n][Math.floor(x+0.5)][Math.floor(y+0.5)]=='#');
 	}
 
 	class Object{
-		constructor(type,x,y,id, player, effect){
+		constructor(type,x,y,id, player, effect, color){
 			this.type = type;
 			this.x = x;
 			this.y = y;
 			this.id = id;
 			this.player = player;
 			this.effect = effect;
+			this.color = color;
 			this.animation = 0;
 			this.state = 0;
+			if(this.type=="door"){
+				if(this.state==1){collisions[this.player][this.x][this.y]='.';}
+				else{collisions[this.player][this.x][this.y]='#';}
+			}
 		}
 
 		activate(){
@@ -29,6 +34,11 @@ function main(){
 			switch(this.type){
 				case "light" :
 					this.state = (this.state+1)%2;
+					break;
+				case "door":
+					this.state = (this.state+1)%2;
+					if(this.state==1){collisions[this.player][this.x][this.y]='.';}
+					else{collisions[this.player][this.x][this.y]='#';}
 					break;
 			}
 		}
@@ -51,7 +61,7 @@ function main(){
 			let y = centers[this.player][1]+(this.y-cameray[this.player])*block_size;
 			switch(this.type){
 				case "levier" :
-					ctx.strokeStyle = "rgb(100,100,100)";
+					ctx.strokeStyle = this.color;
 					ctx.beginPath();
 					ctx.moveTo(x-20+40*this.state, y-10);
 					ctx.lineTo(x, y+10);
@@ -63,6 +73,12 @@ function main(){
 					ctx.beginPath();
 					ctx.arc(x, y, 20, 0, 2 * Math.PI);
 					ctx.fill();
+					break;
+				case "door" :
+					if(this.state==0){
+						ctx.fillStyle = this.color;
+						ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+					}
 					break;
 			}
 		}
@@ -265,9 +281,10 @@ function main(){
 
 	var map = read_map(map1);
 	var niveaux = map.obstacles;
+	var collisions = JSON.parse(JSON.stringify(map.obstacles));
 	var objects = [[],[]];
 	for (let i_object = 0; i_object < map.objects.length; i_object++)  {
-        objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect))
+        objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color))
     }
 
 	var functiontoexecute = loop;
