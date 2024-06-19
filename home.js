@@ -72,22 +72,7 @@ function main(){
 	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
 	var centers = [[256,234],[768,234]];
-	var niveau0 = ["000000000000000",
-				   "110111111110001",
-				   "001100011100001",
-				   "110110001000001",
-				   "110110001000001",
-				   "110100101000001",
-				   "110110001000001",
-				   "110110001000001",
-				   "001100011100001",
-				   "001100011100001",
-				   "001100011100001",
-				   "110110001000001",
-				   "001100011100001",
-				   "001100011100001",
-				   "001100011100001"
-	]
+	var niveau0 = []
 
 	var niveau1 = niveau0;
 
@@ -153,8 +138,10 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	var functiontoexecute = loop;
-	globalloop();
 	var map = read_map(map1);
 	console.log(map);
+	var niveaux = map.obstacles;
+
+	var functiontoexecute = loop;
+	globalloop();
 }
