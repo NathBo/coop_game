@@ -59,6 +59,7 @@ function main(){
 		afficher(){
 			let x = centers[this.player][0]+(this.x-camerax[this.player])*block_size;
 			let y = centers[this.player][1]+(this.y-cameray[this.player])*block_size;
+			if(x-block_size/2-5>centers[this.player][0]+realvisonrange/2){return;}
 			switch(this.type){
 				case "levier" :
 					ctx.strokeStyle = this.color;
@@ -79,6 +80,18 @@ function main(){
 						ctx.fillStyle = this.color;
 						ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
 					}
+					else{
+						ctx.strokeStyle = this.color;
+						ctx.strokeRect(x-block_size/2,y-block_size/2,block_size,block_size);
+					}
+					break;
+				case "exit" :
+					this.animation = (this.animation+1)%511;
+					var a = Math.abs(this.animation-255);
+					ctx.fillStyle = "rgb("+a+","+a+","+a+")";
+					ctx.beginPath();
+					ctx.arc(x, y, 25, 0, 2 * Math.PI);
+					ctx.fill();
 					break;
 			}
 		}

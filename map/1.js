@@ -39,8 +39,8 @@ var map1 = {
               {"x":0, "y":0} ],
 
     "objects":[
-        { "type":"exit", "player":0, "x":7, "y":1 },
-        { "type":"exit", "player":1, "x":7, "y":1 },
+        { "type":"exit", "player":0, "x":11, "y":3 },
+        { "type":"exit", "player":1, "x":11, "y":3 },
         { "type":"door", "player":0, "x":8, "y":9, "id" : "door1", "color" : "green" },
         { "type":"levier", "player":1, "x":9, "y":11, "effect":["door1"] , "color" : "green" },
         { "type":"light", "player":1, "x":6, "y":5, "id":"light1" },
