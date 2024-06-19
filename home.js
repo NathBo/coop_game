@@ -20,7 +20,7 @@ function main(){
 						ctx.fillStyle = "black";
 						ctx.fillRect(x,y,w,block_size+1);
 					}
-					else if(niveaux[player][Math.round(camerax[player])+i][Math.round(cameray[player])+j]=='1'){
+					else if(niveaux[player][Math.round(camerax[player])+i][Math.round(cameray[player])+j]=='#'){
 						ctx.fillStyle = "brown";
 						ctx.fillRect(x,y,w,block_size+1)
 					}
