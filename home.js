@@ -8,6 +8,10 @@ function main(){
 		  canvas.style.height  = Height+'px';
 	}
 
+	function touchesblock(n,x,y){
+		return (niveaux[n][Math.floor(x+0.5)][Math.floor(y+0.5)]=='#');
+	}
+
 
 	class Joueur{
 		constructor(x,y,n){
@@ -15,12 +19,25 @@ function main(){
 			this.gauche=0;this.droite=0;this.bas=0;this.haut=0;this.espace=0;this.item=0;
 			this.vitesse = 0.1;
 		}
+
+		touchesblock(){
+			return touchesblock(this.n,this.x+player_size/block_size/2,this.y+player_size/block_size/2) || touchesblock(this.n,this.x-player_size/block_size/2,this.y+player_size/block_size/2)
+				|| touchesblock(this.n,this.x+player_size/block_size/2,this.y-player_size/block_size/2) || touchesblock(this.n,this.x-player_size/block_size/2,this.y-player_size/block_size/2);
+		}
+		
+		try_to_move(movx,movy){
+			this.x+=movx;
+			this.y+=movy;
+			if(this.touchesblock()){
+				this.x-=movx;
+				this.y-=movy;
+			}
+		}
 		loop(){
-			if(this.gauche){this.x-=this.vitesse;}
-			else if(this.droite){this.x+=this.vitesse;}
-			if(this.haut){this.y-=this.vitesse;}
-			else if(this.bas){this.y+=this.vitesse;}
-			console.log(map.obstacles[0].length);
+			if(this.gauche){this.try_to_move(-this.vitesse,0);}
+			else if(this.droite){this.try_to_move(this.vitesse,0);}
+			if(this.haut){this.try_to_move(0,-this.vitesse);}
+			else if(this.bas){this.try_to_move(0,this.vitesse);}
 			camerax[this.n] = Math.min(Math.max(this.x,vision_range-1.5),map.obstacles[this.n].length-vision_range);
 			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
 		}
