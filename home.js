@@ -12,17 +12,16 @@ function main(){
 		for (var player=1; player>=0; player--){
 			for(var i=-vision_range+1;i<=vision_range;i++){
 				for(var j=-vision_range+1;j<=vision_range;j++){
-					let x = centers[player][0]+(Math.round(camerax)+i-camerax)*block_size-block_size/2;
-					let y = centers[player][1]+(Math.round(cameray)+j-cameray)*block_size-block_size/2;
+					let x = centers[player][0]+(Math.round(camerax[player])+i-camerax[player])*block_size-block_size/2;
+					let y = centers[player][1]+(Math.round(cameray[player])+j-cameray[player])*block_size-block_size/2;
 					let w = Math.min(block_size+1,centers[player][0]+realvisonrange/2-x+block_size/2);
 					if(w<=0){}
-					else if(Math.floor(camerax)+i<0 || Math.round(cameray)+j<0){
+					else if(Math.round(camerax[player])+i<0 || Math.round(cameray[player])+j<0 || Math.round(camerax[player])+i>=niveaux[player].length){
 						ctx.fillStyle = "black";
 						ctx.fillRect(x,y,w,block_size+1);
 					}
-					else if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
+					else if(niveaux[player][Math.round(camerax[player])+i][Math.round(cameray[player])+j]=='1'){
 						ctx.fillStyle = "brown";
-						console.log(i,j,centers[player][0]+realvisonrange/2-x)
 						ctx.fillRect(x,y,w,block_size+1)
 					}
 					else{
@@ -43,10 +42,14 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
-		if(gauche){camerax-=0.1;}
-		if(droite){camerax+=0.1;}
-		if(haut){cameray-=0.1;}
-		if(bas){cameray+=0.1;}
+		if(gauche){camerax[0]-=0.1;}
+		if(droite){camerax[0]+=0.1;}
+		if(haut){cameray[0]-=0.1;}
+		if(bas){cameray[0]+=0.1;}
+		if(gauche2){camerax[1]-=0.1;}
+		if(droite2){camerax[1]+=0.1;}
+		if(haut2){cameray[1]-=0.1;}
+		if(bas2){cameray[1]+=0.1;}
 		affichtt();
 	}
 
@@ -66,7 +69,7 @@ function main(){
 	ctx.imageSmoothingEnabled = false;
 	var frame_delay = 16;
 	var decalage = 0; var wdecalagey = 0;
-	var camerax = 5; var cameray = 4;
+	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
 	var centers = [[256,234],[768,234]];
 	var niveau0 = ["000000000000000",
@@ -90,9 +93,9 @@ function main(){
 
 	var niveaux = [niveau0,niveau1];
 
-	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","KeyD","KeyA","KeyW","KeyS","KeyR","KeyT"];
+	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","Enter","KeyD","KeyA","KeyW","KeyS","KeyR","KeyT"];
 
-	var gauche=0; var droite = 0; var haut = 0; var bas = 0;	
+	var gauche=0; var droite = 0; var haut = 0; var bas = 0; var gauche2 = 0; var droite2 = 0; var haut2 = 0; var bas2 = 0;
 
 
 	function logKey(e) {
