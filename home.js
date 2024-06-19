@@ -12,6 +12,72 @@ function main(){
 		return (niveaux[n][Math.floor(x+0.5)][Math.floor(y+0.5)]=='#');
 	}
 
+	class Object{
+		constructor(type,x,y,id, player, effect){
+			this.type = type;
+			this.x = x;
+			this.y = y;
+			this.id = id;
+			this.player = player;
+			this.effect = effect;
+			this.animation = 0;
+			this.state = 0;
+		}
+
+		activate(){
+			console.log(this.id);
+			switch(this.type){
+				case "light" :
+					this.state = (this.state+1)%2;
+					break;
+			}
+		}
+
+		interact(player){
+			switch(this.type){
+				case "levier" :
+					this.state = (this.state+1)%2;
+					tryactivateall(this.effect);
+					break;
+			}
+		}
+
+		try_to_interact(player){
+			if((this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.interact(player);}
+		}
+
+		afficher(){
+			let x = centers[this.player][0]+(this.x-camerax[this.player])*block_size;
+			let y = centers[this.player][1]+(this.y-cameray[this.player])*block_size;
+			switch(this.type){
+				case "levier" :
+					ctx.strokeStyle = "rgb(100,100,100)";
+					ctx.beginPath();
+					ctx.moveTo(x-20+40*this.state, y-10);
+					ctx.lineTo(x, y+10);
+					ctx.stroke();
+					break;
+				case "light" :
+					if(this.state==0){ctx.fillStyle = "gray";}
+					else{ctx.fillStyle = "yellow";}
+					ctx.beginPath();
+					ctx.arc(x, y, 20, 0, 2 * Math.PI);
+					ctx.fill();
+					break;
+			}
+		}
+	}
+
+
+	function tryactivateall(id_list){
+		for(var player=0; player<2; player++){
+			for(var i=0; i<objects[player].length; i++){
+				console.log(objects[player][i].id);
+				if(id_list.includes(objects[player][i].id)){objects[player][i].activate()}
+			}
+		}
+	}
+
 
 	class Joueur{
 		constructor(x,y,n){
@@ -38,6 +104,12 @@ function main(){
 			else if(this.droite){this.try_to_move(this.vitesse,0);}
 			if(this.haut){this.try_to_move(0,-this.vitesse);}
 			else if(this.bas){this.try_to_move(0,this.vitesse);}
+			if(this.espace==1){
+				this.espace=2;
+				for(var i=0; i<objects[this.n].length; i++){
+					objects[this.n][i].try_to_interact(this);
+				}
+			}
 			camerax[this.n] = Math.min(Math.max(this.x,vision_range-1.5),map.obstacles[this.n].length-vision_range);
 			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
 		}
@@ -77,6 +149,9 @@ function main(){
 					ctx.fillRect(x,y,w,block_size+1);
 				}
 			}
+		}
+		for(var i=0; i<objects[player].length; i++){
+			objects[player][i].afficher();
 		}
 		if(player==0){j1.afficher();}
 		else{j2.afficher();}
@@ -190,6 +265,10 @@ function main(){
 
 	var map = read_map(map1);
 	var niveaux = map.obstacles;
+	var objects = [[],[]];
+	for (let i_object = 0; i_object < map.objects.length; i_object++)  {
+        objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect))
+    }
 
 	var functiontoexecute = loop;
 	globalloop();
