@@ -258,7 +258,7 @@ function main(){
 
 	var niveaux = [];
 
-	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","Enter","KeyD","KeyA","KeyW","KeyS","KeyR","KeyT"];
+	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","Enter","KeyD","KeyA","KeyW","KeyS","Digit1","Digit2"];
 
 	j1 = new Joueur(5,5,0);
 	j2 = new Joueur(5,5,1);
