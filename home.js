@@ -30,7 +30,6 @@ function main(){
 		}
 
 		activate(){
-			console.log(this.id);
 			switch(this.type){
 				case "light" :
 					this.state = (this.state+1)%2;
@@ -92,6 +91,11 @@ function main(){
 					ctx.beginPath();
 					ctx.arc(x, y, 25, 0, 2 * Math.PI);
 					ctx.fill();
+					var j;
+					if(this.player==0){j=j1;}
+					else{j=j2;}
+					if((this.x-j.x)**2+(this.y-j.y)**2<=0.5){j.is_on_portal=true;}
+					else{j.is_on_portal=false;}
 					break;
 			}
 		}
@@ -101,7 +105,6 @@ function main(){
 	function tryactivateall(id_list){
 		for(var player=0; player<2; player++){
 			for(var i=0; i<objects[player].length; i++){
-				console.log(objects[player][i].id);
 				if(id_list.includes(objects[player][i].id)){objects[player][i].activate()}
 			}
 		}
@@ -113,6 +116,12 @@ function main(){
 			this.x = x; this.y = y; this.n = n;
 			this.gauche=0;this.droite=0;this.bas=0;this.haut=0;this.espace=0;this.item=0;
 			this.vitesse = 0.1;
+			this.is_on_portal = false;
+		}
+
+		reset(x,y){
+			this.x = x; this.y = y;
+			this.is_on_portal = false;
 		}
 
 		touchesblock(){
@@ -186,6 +195,17 @@ function main(){
 		else{j2.afficher();}
 	}
 
+	function loadmap(fmap){
+		map = read_map(fmap);
+		niveaux = map.obstacles;
+		collisions = JSON.parse(JSON.stringify(map.obstacles));
+		objects = [[],[]];
+		for (let i_object = 0; i_object < map.objects.length; i_object++)  {
+			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color))
+		}
+		j1.reset( map.spawn[0].x,map.spawn[0].y); j2.reset(map.spawn[1].x,map.spawn[1].y);
+	}
+
 
 
 	function affichtt(){
@@ -206,10 +226,16 @@ function main(){
 		j1.loop();
 		j2.loop();
 		affichtt();
+		if(j1.is_on_portal && j2.is_on_portal){
+			currentlevel = (currentlevel+1)%list_niveaux.length;
+			gamefreeze=20;
+			loadmap(list_niveaux[currentlevel]);
+		}
 	}
 
 	function globalloop(){
 		setTimeout(globalloop,frame_delay);
+		if(gamefreeze){gamefreeze--;return;}
 		functiontoexecute();
 	}
 
@@ -228,6 +254,7 @@ function main(){
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
 	var centers = [[768,288],[256,288]];
 	var player_size = 20;
+	var gamefreeze = 0;
 
 	var niveaux = [];
 
@@ -292,13 +319,13 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	var map = read_map(map1);
-	var niveaux = map.obstacles;
-	var collisions = JSON.parse(JSON.stringify(map.obstacles));
+	var map;
+	var niveaux;
+	var collisions;
 	var objects = [[],[]];
-	for (let i_object = 0; i_object < map.objects.length; i_object++)  {
-        objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color))
-    }
+	var list_niveaux = [map0,map1];
+	var currentlevel = 0;
+	loadmap(list_niveaux[currentlevel]);
 
 	var functiontoexecute = loop;
 	globalloop();
