@@ -8,6 +8,30 @@ function main(){
 		  canvas.style.height  = Height+'px';
 	}
 
+
+	class Joueur{
+		constructor(x,y,n){
+			this.x = x; this.y = y; this.n = n;
+			this.gauche=0;this.droite=0;this.bas=0;this.haut=0;this.espace=0;this.item=0;
+			this.vitesse = 0.1;
+		}
+		loop(){
+			if(this.gauche){this.x-=this.vitesse;}
+			else if(this.droite){this.x+=this.vitesse;}
+			if(this.haut){this.y-=this.vitesse;}
+			else if(this.bas){this.y+=this.vitesse;}
+			console.log(map.obstacles[0].length);
+			camerax[this.n] = Math.min(Math.max(this.x,vision_range-1.5),map.obstacles[this.n].length-vision_range);
+			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
+		}
+		afficher(){
+			ctx.fillStyle = "blue";
+			ctx.fillRect(centers[this.n][0]+(this.x-camerax[this.n])*block_size-player_size/2, centers[this.n][1]+(this.y-cameray[this.n])*block_size-player_size/2, player_size, player_size);
+		}
+	}
+
+
+
 	function affichtt(){
 		for (var player=1; player>=0; player--){
 			for(var i=-vision_range+1;i<=vision_range;i++){
@@ -26,12 +50,13 @@ function main(){
 					}
 					else{
 						ctx.fillStyle = "black";
-						console.log(i,j,centers[player][0]+realvisonrange/2-x);
 						ctx.fillRect(x,y,w,block_size+1);
 					}
 				}
 			}
 		}
+		j1.afficher();
+		j2.afficher();
 		ctx.fillStyle = "gray";
 		ctx.fillRect(0,0,1024,64);
 		ctx.fillRect(0,576-64,1024,64);
@@ -42,14 +67,8 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
-		if(gauche){camerax[0]-=0.1;}
-		if(droite){camerax[0]+=0.1;}
-		if(haut){cameray[0]-=0.1;}
-		if(bas){cameray[0]+=0.1;}
-		if(gauche2){camerax[1]-=0.1;}
-		if(droite2){camerax[1]+=0.1;}
-		if(haut2){cameray[1]-=0.1;}
-		if(bas2){cameray[1]+=0.1;}
+		j1.loop();
+		j2.loop();
 		affichtt();
 	}
 
@@ -71,48 +90,47 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
-	var centers = [[256,234],[768,234]];
-	var niveau0 = []
+	var centers = [[256,288],[768,288]];
+	var player_size = 20;
 
-	var niveau1 = niveau0;
-
-	var niveaux = [niveau0,niveau1];
+	var niveaux = [];
 
 	var controls = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyL","Semicolon","Enter","KeyD","KeyA","KeyW","KeyS","KeyR","KeyT"];
 
-	var gauche=0; var droite = 0; var haut = 0; var bas = 0; var gauche2 = 0; var droite2 = 0; var haut2 = 0; var bas2 = 0;
+	j1 = new Joueur(5,5,0);
+	j2 = new Joueur(5,5,1);
 
 
 	function logKey(e) {
-		if(e.code==controls[0]&&droite==0){droite=1}
-		if(e.code==controls[1]&&gauche==0){gauche=1}
-		if(e.code==controls[2]&&haut==0){haut=1}
-		if(e.code==controls[3]&&bas==0){bas=1}
-		if(e.code==controls[4]&&espace==0){espace=1}
-		if(e.code==controls[5]&&item==0){item=1}
+		if(e.code==controls[0]&&j1.droite==0){j1.droite=1;}
+		if(e.code==controls[1]&&j1.gauche==0){j1.gauche=1}
+		if(e.code==controls[2]&&j1.haut==0){j1.haut=1}
+		if(e.code==controls[3]&&j1.bas==0){j1.bas=1}
+		if(e.code==controls[4]&&j1.espace==0){j1.espace=1}
+		if(e.code==controls[5]&&j1.item==0){j1.item=1}
 		if(e.code==controls[6]&&start==0){start=1}
-		if(e.code==controls[7]&&droite2==0){droite2=1}
-		if(e.code==controls[8]&&gauche2==0){gauche2=1}
-		if(e.code==controls[9]&&haut2==0){haut2=1}
-		if(e.code==controls[10]&&bas2==0){bas2=1}
-		if(e.code==controls[11]&&espace2==0){espace2=1}
-		if(e.code==controls[12]&&item2==0){item2=1}
+		if(e.code==controls[7]&&j2.droite==0){j2.droite=1}
+		if(e.code==controls[8]&&j2.gauche==0){j2.gauche=1}
+		if(e.code==controls[9]&&j2.haut==0){j2.haut=1}
+		if(e.code==controls[10]&&j2.bas==0){j2.bas=1}
+		if(e.code==controls[11]&&j2.espace==0){j2.espace=1}
+		if(e.code==controls[12]&&j2.item==0){j2.item=1}
 		key=e.code;
 	}
 	function unlogKey(e){
-		if(e.code==controls[0]){droite=0}
-		else if(e.code==controls[1]){gauche=0}
-		else if(e.code==controls[2]){haut=0}
-		else if(e.code==controls[3]){bas=0}
-		else if(e.code==controls[4]){espace=0}
-		else if(e.code==controls[5]){item=0}
+		if(e.code==controls[0]){j1.droite=0;}
+		else if(e.code==controls[1]){j1.gauche=0}
+		else if(e.code==controls[2]){j1.haut=0}
+		else if(e.code==controls[3]){j1.bas=0}
+		else if(e.code==controls[4]){j1.espace=0}
+		else if(e.code==controls[5]){j1.item=0}
 		else if(e.code==controls[6]){start=0}
-		if(e.code==controls[7]){droite2=0}
-		if(e.code==controls[8]){gauche2=0}
-		if(e.code==controls[9]){haut2=0}
-		if(e.code==controls[10]){bas2=0}
-		if(e.code==controls[11]){espace2=0}
-		if(e.code==controls[12]){item2=0}
+		if(e.code==controls[7]){j2.droite=0}
+		if(e.code==controls[8]){j2.gauche=0}
+		if(e.code==controls[9]){j2.haut=0}
+		if(e.code==controls[10]){j2.bas=0}
+		if(e.code==controls[11]){j2.espace=0}
+		if(e.code==controls[12]){j2.item=0}
 	}
 	function clickEvent(e){
 		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;click=1;
@@ -139,7 +157,6 @@ function main(){
 	document.addEventListener("mouseup", unclickEvent);
 
 	var map = read_map(map1);
-	console.log(map);
 	var niveaux = map.obstacles;
 
 	var functiontoexecute = loop;
