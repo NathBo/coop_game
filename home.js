@@ -9,17 +9,26 @@ function main(){
 	}
 
 	function affichtt(){
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
 		for (var player=1; player>=0; player--){
-			for(var i=-vision_range;i<=vision_range;i++){
-				for(var j=-vision_range;j<=vision_range;j++){
-					if(Math.floor(camerax)+i<0 || Math.round(cameray)+j<0){}
+			for(var i=-vision_range+1;i<=vision_range;i++){
+				for(var j=-vision_range+1;j<=vision_range;j++){
+					let x = centers[player][0]+(Math.round(camerax)+i-camerax)*block_size-block_size/2;
+					let y = centers[player][1]+(Math.round(cameray)+j-cameray)*block_size-block_size/2;
+					let w = Math.min(block_size+1,centers[player][0]+realvisonrange/2-x+block_size/2);
+					if(w<=0){}
+					else if(Math.floor(camerax)+i<0 || Math.round(cameray)+j<0){
+						ctx.fillStyle = "black";
+						ctx.fillRect(x,y,w,block_size+1);
+					}
 					else if(niveaux[player][Math.round(camerax)+i][Math.round(cameray)+j]=='1'){
 						ctx.fillStyle = "brown";
-						let x = centers[player][0]+(Math.round(camerax)+i-camerax)*block_size;
-						let y = centers[player][1]+(Math.round(cameray)+j-cameray)*block_size;
-						ctx.fillRect(x,y,Math.min(block_size+1,centers[player][0]+realvisonrange/2-x),block_size+1)
+						console.log(i,j,centers[player][0]+realvisonrange/2-x)
+						ctx.fillRect(x,y,w,block_size+1)
+					}
+					else{
+						ctx.fillStyle = "black";
+						console.log(i,j,centers[player][0]+realvisonrange/2-x);
+						ctx.fillRect(x,y,w,block_size+1);
 					}
 				}
 			}
