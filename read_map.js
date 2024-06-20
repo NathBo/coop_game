@@ -8,7 +8,8 @@ function initialize3DArray(x, y, z, val) {
 
 
 
-function read_map(map){
+function read_map(old_map){
+    var map = JSON.parse(JSON.stringify(old_map));
     let largeur = map.obstacles[0][0].length;
     let hauteur = map.obstacles[0].length;
     let nb_objects = map.objects.length;

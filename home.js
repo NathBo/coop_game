@@ -91,11 +91,18 @@ function main(){
 					ctx.fill();
 					break;
 				case "bouton" :
-					if(this.state==0){ctx.fillStyle = "rgb(100,100,100)";}
-					else{ctx.fillStyle = "rgb(200,200,200)";}
-					ctx.beginPath();
-					ctx.arc(x, y, 15, 0, 2 * Math.PI);
-					ctx.fill();
+					if(this.state==0){
+						ctx.fillStyle = this.color;
+						ctx.beginPath();
+						ctx.arc(x, y, 15, 0, 2 * Math.PI);
+						ctx.fill()
+					}
+					else{
+						ctx.strokeStyle = this.color;
+						ctx.beginPath();
+						ctx.arc(x, y, 15, 0, 2 * Math.PI);
+						ctx.stroke()
+					}
 					break;
 				case "door" :
 					if(this.state==0){
@@ -252,6 +259,7 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
+		if(start==1){start=2;gamefreeze=20;loadmap(list_niveaux[currentlevel]);}
 		for(var i=0; i<objects[0].length; i++){
 			objects[0][i].loop();
 		}
@@ -283,7 +291,7 @@ function main(){
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
-	var frame_delay = 16;
+	var frame_delay = 16; var start = 0;
 	var decalage = 0; var wdecalagey = 0;
 	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
@@ -358,7 +366,7 @@ function main(){
 	var niveaux;
 	var collisions;
 	var objects = [[],[]];
-	var list_niveaux = [map0,map1,map2];
+	var list_niveaux = [map0,map1,map2,map4];
 	var currentlevel = 0;
 	loadmap(list_niveaux[currentlevel]);
 
