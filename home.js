@@ -48,11 +48,27 @@ function main(){
 					this.state = (this.state+1)%2;
 					tryactivateall(this.effect);
 					break;
+				case "bouton" :
+					if(this.state==0){
+						this.state=150;
+						tryactivateall(this.effect);
+					}
 			}
 		}
 
 		try_to_interact(player){
 			if((this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.interact(player);}
+		}
+
+		loop(){
+			switch (this.type){
+				case "bouton" :
+					if(this.state){
+						this.state--;
+						if(this.state==0){tryactivateall(this.effect);}
+					}
+					break;
+			}
 		}
 
 		afficher(){
@@ -72,6 +88,13 @@ function main(){
 					else{ctx.fillStyle = "yellow";}
 					ctx.beginPath();
 					ctx.arc(x, y, 20, 0, 2 * Math.PI);
+					ctx.fill();
+					break;
+				case "bouton" :
+					if(this.state==0){ctx.fillStyle = "rgb(100,100,100)";}
+					else{ctx.fillStyle = "rgb(200,200,200)";}
+					ctx.beginPath();
+					ctx.arc(x, y, 15, 0, 2 * Math.PI);
 					ctx.fill();
 					break;
 				case "door" :
@@ -229,6 +252,12 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
+		for(var i=0; i<objects[0].length; i++){
+			objects[0][i].loop();
+		}
+		for(var i=0; i<objects[1].length; i++){
+			objects[1][i].loop();
+		}
 		j1.loop();
 		j2.loop();
 		affichtt();
