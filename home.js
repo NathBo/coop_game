@@ -117,6 +117,8 @@ function main(){
 			this.gauche=0;this.droite=0;this.bas=0;this.haut=0;this.espace=0;this.item=0;
 			this.vitesse = 0.1;
 			this.is_on_portal = false;
+			if(this.n==0){this.costume = darkcharpng;}
+			else{this.costume = lightcharpng;}
 		}
 
 		reset(x,y){
@@ -152,8 +154,10 @@ function main(){
 			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
 		}
 		afficher(){
-			ctx.fillStyle = "blue";
-			ctx.fillRect(centers[this.n][0]+(this.x-camerax[this.n])*block_size-player_size/2, centers[this.n][1]+(this.y-cameray[this.n])*block_size-player_size/2, player_size, player_size);
+			ctx.scale(2,2);
+			ctx.drawImage(this.costume,(centers[this.n][0]+(this.x-camerax[this.n])*block_size-player_size/2)/2, (centers[this.n][1]+(this.y-cameray[this.n])*block_size-player_size/2)/2);
+			ctx.setTransform(1,0,0,1,0,0);
+			ctx.scale(1,1);
 		}
 	}
 
