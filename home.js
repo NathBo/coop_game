@@ -13,7 +13,7 @@ function main(){
 	}
 
 	class Object{
-		constructor(type,x,y,id, player, effect, color){
+		constructor(type,x,y,id, player, effect, color, state){
 			this.type = type;
 			this.x = x;
 			this.y = y;
@@ -22,7 +22,7 @@ function main(){
 			this.effect = effect;
 			this.color = color;
 			this.animation = 0;
-			this.state = 0;
+			this.state = state;
 			if(this.type=="door"){
 				if(this.state==1){collisions[this.player][this.x][this.y]='.';}
 				else{collisions[this.player][this.x][this.y]='#';}
@@ -205,7 +205,9 @@ function main(){
 		collisions = JSON.parse(JSON.stringify(map.obstacles));
 		objects = [[],[]];
 		for (let i_object = 0; i_object < map.objects.length; i_object++)  {
-			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color))
+			objects[map.objects[i_object].player].push(
+				new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color,map.objects[i_object].state)
+			)
 		}
 		j1.reset( map.spawn[0].x,map.spawn[0].y); j2.reset(map.spawn[1].x,map.spawn[1].y);
 	}

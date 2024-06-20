@@ -30,6 +30,8 @@ function read_map(map){
             map.objects[i_object].effect = [];
         if (map.objects[i_object].color === undefined)
             map.objects[i_object].color = "rgb(100,100,100)";
+        if (map.objects[i_object].state === undefined)
+            map.objects[i_object].state = 0;
     }
 
     return map;
