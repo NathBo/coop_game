@@ -177,10 +177,30 @@ function main(){
 						ctx.strokeRect(x-block_size/2,y-block_size/2,block_size,block_size);
 					}
 				    break;
-				case "item":
-					ctx.fillStyle = this.color;
-					ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+				case "item":    {
+				    switch(this.category){
+                        case "key":
+                        	ctx.fillStyle = "yellow";
+					    	ctx.beginPath();
+						    ctx.arc(x, y-10, 6, 0, 2 * Math.PI);
+						    ctx.fill()
+                            ctx.strokeStyle = "yellow";
+					        ctx.beginPath();
+					        ctx.moveTo(x, y-10);
+					        ctx.lineTo(x, y+10);
+					        ctx.lineTo(x+5, y+10);
+					        ctx.moveTo(x+5, y+6);
+					        ctx.lineTo(x, y+6);
+					        ctx.moveTo(x, y+2);
+                            ctx.lineTo(x+5, y+2);
+					        ctx.stroke();
+                            break;
+                        default:
+					        ctx.fillStyle = this.color;
+					        ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+    			    }
     				break;
+    			}
 			}
 		}
 	}
