@@ -75,7 +75,7 @@ function main(){
                 case "key":
                     for(var i=0; i<objects[player.n].length; i++){
                         if (objects[player.n][i].type == "look_door" && objects[player.n][i].state==0 && (objects[player.n][i].x-player.x)**2 + (objects[player.n][i].y-player.y)**2 <= 0.8) {
-                            player.inventaire == null;
+                            player.inventaire = null;
                             objects[player.n][i].activate();
                         }
                     }   
@@ -208,6 +208,11 @@ function main(){
 			                break;
 			            }
 			        }
+			    } else  {
+			        this.inventaire.x = Math.round(this.x);
+			        this.inventaire.y = Math.round(this.y);
+			        objects[2].push(this.inventaire);
+			        this.inventaire = null;
 			    }
 			}
 			camerax[this.n] = Math.min(Math.max(this.x,vision_range-1.5),map.obstacles[this.n].length-vision_range);
@@ -254,8 +259,7 @@ function main(){
 			objects[player][i].afficher(player);
 		}
         for(var i=0; i<objects[2].length; i++){
-			objects[2][i].afficher(0);
-			objects[2][i].afficher(1);
+			objects[2][i].afficher(player);
 		}
 
 		if(player==0){j1.afficher();}
