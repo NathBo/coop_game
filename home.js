@@ -162,6 +162,15 @@ function main(){
 					if(this.state==0){
 						ctx.fillStyle = this.color;
 						ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+                        
+                        ctx.strokeStyle = "yellow";
+					    ctx.beginPath();
+					    ctx.moveTo(x-block_size/2, y-block_size/2);
+					    ctx.lineTo(x+block_size/2, y+block_size/2);
+					    ctx.moveTo(x+block_size/2, y-block_size/2);
+					    ctx.lineTo(x-block_size/2, y+block_size/2);
+					    ctx.stroke();
+
 					}
 					else{
 						ctx.strokeStyle = this.color;
@@ -451,7 +460,7 @@ function main(){
 	var collisions;
 	var objects = [[],[],[]];
 	var list_niveaux = [map0,map1,map2,map3,map4,map5];
-	var currentlevel = 0;
+	var currentlevel = 3;
 	loadmap(list_niveaux[currentlevel]);
 
 	var functiontoexecute = loop;
