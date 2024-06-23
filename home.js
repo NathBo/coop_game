@@ -101,7 +101,6 @@ function main(){
 			}
 		}
 
-	    
 		afficher(player){
 			let x = centers[player][0]+(this.x-camerax[player])*block_size;
 			let y = centers[player][1]+(this.y-cameray[player])*block_size;
@@ -180,20 +179,10 @@ function main(){
 				case "item":    {
 				    switch(this.category){
                         case "key":
-                        	ctx.fillStyle = "yellow";
-					    	ctx.beginPath();
-						    ctx.arc(x, y-10, 6, 0, 2 * Math.PI);
-						    ctx.fill()
-                            ctx.strokeStyle = "yellow";
-					        ctx.beginPath();
-					        ctx.moveTo(x, y-10);
-					        ctx.lineTo(x, y+10);
-					        ctx.lineTo(x+5, y+10);
-					        ctx.moveTo(x+5, y+6);
-					        ctx.lineTo(x, y+6);
-					        ctx.moveTo(x, y+2);
-                            ctx.lineTo(x+5, y+2);
-					        ctx.stroke();
+                            ctx.scale(2,2);
+			                ctx.drawImage(keypng,x/2, y/2);
+			                ctx.setTransform(1,0,0,1,0,0);
+			                ctx.scale(1,1);
                             break;
                         default:
 					        ctx.fillStyle = this.color;
@@ -203,6 +192,33 @@ function main(){
     			}
 			}
 		}
+
+	    afficher_inventaire(player) {
+
+            let x = 1024-60;
+            let y = 576-60;
+            ctx.fillStyle = "black";
+            if (player == 0)    {
+                x = 0;
+        	    ctx.fillRect(0,576-60,60,576);
+        	}   else    {
+        	    ctx.fillRect(1024-60,576-60,1024,576);
+        	}
+
+
+			switch(this.category){
+                case "key":
+                    ctx.scale(3.6,3.6);
+                    ctx.drawImage(keypng,x/3.6, y/3.6);
+                    ctx.setTransform(1,0,0,1,0,0);
+                    ctx.scale(1,1);
+                    break;
+                default:
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+            }
+        }
+    		
 	}
 
 
@@ -260,7 +276,7 @@ function main(){
 
 			}
 			if(this.item==1){
-			    this.item==2;
+			    this.item=2;
 			    if (this.inventaire==null)  {
 			        for(var i=0; i<objects[2].length; i++){
 			            if (objects[2][i].type == "item" && objects[2][i].try_to_pick(this)) {
@@ -355,18 +371,9 @@ function main(){
 		ctx.fillRect(1024-12,0,12,576);
 		ctx.fillRect(500,0,24,576);
 		
-		for (let id_player=0; id_player<2; id_player++){
-		    let player = [j1,j2][id_player];
-			if (player.inventaire!=null)    {
-		        ctx.fillStyle = "black";
-
-		        if (id_player == 0)
-        		    ctx.fillRect(1024-60,576-60,1024,576);
-        	    else
-        		    ctx.fillRect(0,576-60,60,576);
-
-        	}
-		}
+		if (j1.inventaire != null) j1.inventaire.afficher_inventaire(1);
+		if (j2.inventaire != null) j2.inventaire.afficher_inventaire(0);
+		
 	
 	}
 	
