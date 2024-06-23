@@ -8,7 +8,8 @@ function initialize3DArray(x, y, z, val) {
 
 
 
-function read_map(map){
+function read_map(old_map){
+    var map = JSON.parse(JSON.stringify(old_map));
     let largeur = map.obstacles[0][0].length;
     let hauteur = map.obstacles[0].length;
     let nb_objects = map.objects.length;
@@ -36,6 +37,8 @@ function read_map(map){
             map.objects[i_object].category = "";
         if (map.objects[i_object].color === undefined)
             map.objects[i_object].color = "rgb(100,100,100)";
+        if (map.objects[i_object].state === undefined)
+            map.objects[i_object].state = 0;
     }
 
     return map;

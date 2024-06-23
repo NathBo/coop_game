@@ -13,7 +13,7 @@ function main(){
 	}
 
 	class Object{
-		constructor(type,x,y,id, player, effect, category, color){
+		constructor(type,x,y,id, player, effect, category, color, state){
 			this.type = type;
 			this.x = x;
 			this.y = y;
@@ -22,7 +22,7 @@ function main(){
 			this.effect = effect;
 			this.color = color;
 			this.animation = 0;
-			this.state = 0;
+			this.state = state;
 			this.category = category;
 			if(this.type=="door" || this.type=="look_door"){
 				if(this.state==1){collisions[this.player][this.x][this.y]='.';}
@@ -50,6 +50,11 @@ function main(){
 					this.state = (this.state+1)%2;
 					tryactivateall(this.effect);
 					break;
+				case "bouton" :
+					if(this.state==0){
+						this.state=150;
+						tryactivateall(this.effect);
+					}
 			}
 		}
 
@@ -84,9 +89,19 @@ function main(){
             return (player.inventaire != null);
         }
     
-		    
+	
+	    loop(){
+			switch (this.type){
+				case "bouton" :
+					if(this.state){
+						this.state--;
+						if(this.state==0){tryactivateall(this.effect);}
+					}
+					break;
+			}
+		}
 
-
+	    
 		afficher(player){
 			let x = centers[player][0]+(this.x-camerax[player])*block_size;
 			let y = centers[player][1]+(this.y-cameray[player])*block_size;
@@ -105,6 +120,20 @@ function main(){
 					ctx.beginPath();
 					ctx.arc(x, y, 20, 0, 2 * Math.PI);
 					ctx.fill();
+					break;
+				case "bouton" :
+					if(this.state==0){
+						ctx.fillStyle = this.color;
+						ctx.beginPath();
+						ctx.arc(x, y, 15, 0, 2 * Math.PI);
+						ctx.fill()
+					}
+					else{
+						ctx.strokeStyle = this.color;
+						ctx.beginPath();
+						ctx.arc(x, y, 15, 0, 2 * Math.PI);
+						ctx.stroke()
+					}
 					break;
 				case "door" :
 					if(this.state==0){
@@ -164,6 +193,8 @@ function main(){
 			this.vitesse = 0.1;
 			this.is_on_portal = false;
 			this.inventaire=null;
+			if(this.n==0){this.costume = darkcharpng;}
+			else{this.costume = lightcharpng;}
 		}
 
 		reset(x,y){
@@ -219,8 +250,10 @@ function main(){
 			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
 		}
 		afficher(){
-			ctx.fillStyle = "blue";
-			ctx.fillRect(centers[this.n][0]+(this.x-camerax[this.n])*block_size-player_size/2, centers[this.n][1]+(this.y-cameray[this.n])*block_size-player_size/2, player_size, player_size);
+			ctx.scale(2,2);
+			ctx.drawImage(this.costume,(centers[this.n][0]+(this.x-camerax[this.n])*block_size-player_size/2)/2, (centers[this.n][1]+(this.y-cameray[this.n])*block_size-player_size/2)/2);
+			ctx.setTransform(1,0,0,1,0,0);
+			ctx.scale(1,1);
 		}
 	}
 
@@ -272,7 +305,9 @@ function main(){
 		collisions = JSON.parse(JSON.stringify(map.obstacles));
 		objects = [[],[],[]]; // the 3rd case is for shared objects
 		for (let i_object = 0; i_object < map.objects.length; i_object++)  {
-			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].category,map.objects[i_object].color))
+			objects[map.objects[i_object].player].push(
+			    new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].category,map.objects[i_object].color,map.objects[i_object].state)
+			)
 		}
 		j1.reset( map.spawn[0].x,map.spawn[0].y); j2.reset(map.spawn[1].x,map.spawn[1].y);
 	}
@@ -308,6 +343,13 @@ function main(){
 	
 	function loop(){
 		resizecanvas();
+		if(start==1){start=2;gamefreeze=20;loadmap(list_niveaux[currentlevel]);}
+		for(var i=0; i<objects[0].length; i++){
+			objects[0][i].loop();
+		}
+		for(var i=0; i<objects[1].length; i++){
+			objects[1][i].loop();
+		}
 		j1.loop();
 		j2.loop();
 		affichtt();
@@ -333,7 +375,7 @@ function main(){
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
-	var frame_delay = 16;
+	var frame_delay = 16; var start = 0;
 	var decalage = 0; var wdecalagey = 0;
 	var camerax = [5,5]; var cameray = [4,4];
 	var vision_range = 5; var block_size = 64; var realvisonrange = 448;
@@ -408,7 +450,7 @@ function main(){
 	var niveaux;
 	var collisions;
 	var objects = [[],[],[]];
-	var list_niveaux = [map0,map1,map2,map3];
+	var list_niveaux = [map0,map1,map2,map3,map4];
 	var currentlevel = 3;
 	loadmap(list_niveaux[currentlevel]);
 
