@@ -87,10 +87,10 @@ function main(){
 		    
 
 
-		afficher(){
-			let x = centers[this.player][0]+(this.x-camerax[this.player])*block_size;
-			let y = centers[this.player][1]+(this.y-cameray[this.player])*block_size;
-			if(x-block_size/2-5>centers[this.player][0]+realvisonrange/2){return;}
+		afficher(player){
+			let x = centers[player][0]+(this.x-camerax[player])*block_size;
+			let y = centers[player][1]+(this.y-cameray[player])*block_size;
+			if(x-block_size/2-5>centers[player][0]+realvisonrange/2){return;}
 			switch(this.type){
 				case "levier" :
 					ctx.strokeStyle = this.color;
@@ -124,7 +124,7 @@ function main(){
 					ctx.arc(x, y, 25, 0, 2 * Math.PI);
 					ctx.fill();
 					var j;
-					if(this.player==0){j=j1;}
+					if(player==0){j=j1;}
 					else{j=j2;}
 					if((this.x-j.x)**2+(this.y-j.y)**2<=0.5){j.is_on_portal=true;}
 					else{j.is_on_portal=false;}
@@ -195,7 +195,6 @@ function main(){
 					objects[this.n][i].try_to_interact(this);
 				}
 				if (this.inventaire != null)    {
-				    alert("essaye");
 				    this.inventaire.try_to_use(this);
                 }
 
@@ -203,9 +202,9 @@ function main(){
 			if(this.item==1){
 			    this.item==2;
 			    if (this.inventaire==null)  {
-			        for(var i=0; i<objects[this.n].length; i++){
-			            if (objects[this.n][i].type == "item" && objects[this.n][i].try_to_pick(this)) {
-			                objects[this.n].splice(i, 1);
+			        for(var i=0; i<objects[2].length; i++){
+			            if (objects[2][i].type == "item" && objects[2][i].try_to_pick(this)) {
+			                objects[2].splice(i, 1);
 			                break;
 			            }
 			        }
@@ -252,8 +251,13 @@ function main(){
 			}
 		}
 		for(var i=0; i<objects[player].length; i++){
-			objects[player][i].afficher();
+			objects[player][i].afficher(player);
 		}
+        for(var i=0; i<objects[2].length; i++){
+			objects[2][i].afficher(0);
+			objects[2][i].afficher(1);
+		}
+
 		if(player==0){j1.afficher();}
 		else{j2.afficher();}
 	}
@@ -262,7 +266,7 @@ function main(){
 		map = read_map(fmap);
 		niveaux = map.obstacles;
 		collisions = JSON.parse(JSON.stringify(map.obstacles));
-		objects = [[],[]];
+		objects = [[],[],[]]; // the 3rd case is for shared objects
 		for (let i_object = 0; i_object < map.objects.length; i_object++)  {
 			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].category,map.objects[i_object].color))
 		}
@@ -399,7 +403,7 @@ function main(){
 	var map;
 	var niveaux;
 	var collisions;
-	var objects = [[],[]];
+	var objects = [[],[],[]];
 	var list_niveaux = [map0,map1,map2,map3];
 	var currentlevel = 3;
 	loadmap(list_niveaux[currentlevel]);
