@@ -13,7 +13,7 @@ function main(){
 	}
 
 	class Object{
-		constructor(type,x,y,id, player, effect, color){
+		constructor(type,x,y,id, player, effect, category, color){
 			this.type = type;
 			this.x = x;
 			this.y = y;
@@ -23,6 +23,7 @@ function main(){
 			this.color = color;
 			this.animation = 0;
 			this.state = 0;
+			this.category = category;
 			if(this.type=="door" || this.type=="look_door"){
 				if(this.state==1){collisions[this.player][this.x][this.y]='.';}
 				else{collisions[this.player][this.x][this.y]='#';}
@@ -35,6 +36,7 @@ function main(){
 					this.state = (this.state+1)%2;
 					break;
 				case "door":
+				case "look_door":
 					this.state = (this.state+1)%2;
 					if(this.state==1){collisions[this.player][this.x][this.y]='.';}
 					else{collisions[this.player][this.x][this.y]='#';}
@@ -58,13 +60,31 @@ function main(){
 		pick(player)    {
 		    console.assert(player.inventaire==null);
 		    player.inventaire = this;
-		    console.log(player.inventaire);
 		}
 
     	try_to_pick(player){
-			if((this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.pick(player);return true;}
+			if(player.inventaire==null && (this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.pick(player);return true;}
 			return false;
 		}
+
+		try_to_use(player)  {
+		    switch (player.inventaire.category)   {
+		        case null:
+		            return false;
+		            break;
+                case "key":
+                    for(var i=0; i<objects[player.n].length; i++){
+                        if (objects[player.n][i].type == "look_door" && objects[player.n][i].state==0 && (objects[player.n][i].x-player.x)**2 + (objects[player.n][i].y-player.y)**2 <= 0.8) {
+                            player.inventaire == null;
+                            objects[player.n][i].activate();
+                        }
+                    }   
+                    break;
+            }
+            return (player.inventaire != null);
+        }
+    
+		    
 
 
 		afficher(){
@@ -175,10 +195,8 @@ function main(){
 					objects[this.n][i].try_to_interact(this);
 				}
 				if (this.inventaire != null)    {
-				    switch (this.inventaire.categoty)   {
-                        case "key":
-                            break;
-                    }
+				    alert("essaye");
+				    this.inventaire.try_to_use(this);
                 }
 
 			}
@@ -188,7 +206,6 @@ function main(){
 			        for(var i=0; i<objects[this.n].length; i++){
 			            if (objects[this.n][i].type == "item" && objects[this.n][i].try_to_pick(this)) {
 			                objects[this.n].splice(i, 1);
-			                console.log(this);
 			                break;
 			            }
 			        }
@@ -247,7 +264,7 @@ function main(){
 		collisions = JSON.parse(JSON.stringify(map.obstacles));
 		objects = [[],[]];
 		for (let i_object = 0; i_object < map.objects.length; i_object++)  {
-			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].color))
+			objects[map.objects[i_object].player].push(new Object(map.objects[i_object].type,map.objects[i_object].x, map.objects[i_object].y, map.objects[i_object].id, map.objects[i_object].player,map.objects[i_object].effect,map.objects[i_object].category,map.objects[i_object].color))
 		}
 		j1.reset( map.spawn[0].x,map.spawn[0].y); j2.reset(map.spawn[1].x,map.spawn[1].y);
 	}

@@ -22,7 +22,7 @@ function read_map(map){
     map.obstacles = new_obstacles;
 
 
-    // well define the id for each objects
+    // well define the ... for each objects
     for (let i_object = 0; i_object < nb_objects; i_object++)  {
         if (map.objects[i_object].x === undefined || map.objects[i_object].y === undefined || map.objects[i_object].player === undefined)
             alert("niveau invalide !!!");
@@ -30,6 +30,8 @@ function read_map(map){
             map.objects[i_object].id = 'new id -> ' + i_object.toString();
         if (map.objects[i_object].effect === undefined)
             map.objects[i_object].effect = [];
+        if (map.objects[i_object].category === undefined)
+            map.objects[i_object].category = "";
         if (map.objects[i_object].color === undefined)
             map.objects[i_object].color = "rgb(100,100,100)";
     }
