@@ -190,6 +190,23 @@ function main(){
     			    }
     				break;
     			}
+                case "monstre":    {
+				    switch(this.category){
+                        case "pics_N":
+                            ctx.strokeStyle = "blue";
+                            ctx.lineWidth = 6;
+					        ctx.beginPath();
+					        ctx.moveTo(x-block_size/2, y-block_size/2+3);
+					        ctx.lineTo(x+block_size/2, y-block_size/2+3);
+					        ctx.stroke();
+                            break;
+                        default:
+					        ctx.fillStyle = this.color;
+					        ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+    			    }
+    				break;
+    			}
+
 			}
 		}
 
@@ -251,10 +268,29 @@ function main(){
 			return touchesblock(this.n,this.x+player_size/block_size/2,this.y+player_size/block_size/2) || touchesblock(this.n,this.x-player_size/block_size/2,this.y+player_size/block_size/2)
 				|| touchesblock(this.n,this.x+player_size/block_size/2,this.y-player_size/block_size/2) || touchesblock(this.n,this.x-player_size/block_size/2,this.y-player_size/block_size/2);
 		}
+		touchesmonstre()    {
+		    for (let obj of objects[this.n].concat(objects[2]))  {
+		        if (obj.type == "monstre")  {
+		            //console.log(obj);
+		            switch(obj.category) {
+                        case "pics_N":
+                            
+                            console.log(obj.x, this.x-player_size/block_size/2, this.x+player_size/block_size/2, obj.x+1, this.y, obj.y, this.y, this.y - obj.y + player_size/block_size/2);
+                            if (obj.x <= this.x+player_size/block_size/2 && this.x-player_size/block_size/2 <= obj.x+1 && Math.abs(this.y - obj.y + player_size/block_size/2) <= 0.05)
+                                return true;
+                            break;
+                    }
+		        }
+		    }
+		    return false;
+		}
 		
 		try_to_move(movx,movy){
 			this.x+=movx;
 			this.y+=movy;
+			if (this.touchesmonstre())  {
+                gamefreeze=20;loadmap(list_niveaux[currentlevel]);
+			}
 			if(this.touchesblock()){
 				this.x-=movx;
 				this.y-=movy;
@@ -486,8 +522,8 @@ function main(){
 	var niveaux;
 	var collisions;
 	var objects = [[],[],[]];
-	var list_niveaux = [map0,map1,map2,map3,map4,map5];
-	var currentlevel = 3;
+	var list_niveaux = [map0,map1,map2,map3,map4,map5,map6];
+	var currentlevel = 6;
 	loadmap(list_niveaux[currentlevel]);
 
 	var functiontoexecute = loop;
