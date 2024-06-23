@@ -450,8 +450,8 @@ function main(){
 	var niveaux;
 	var collisions;
 	var objects = [[],[],[]];
-	var list_niveaux = [map0,map1,map2,map3,map4];
-	var currentlevel = 3;
+	var list_niveaux = [map0,map1,map2,map3,map4,map5];
+	var currentlevel = 0;
 	loadmap(list_niveaux[currentlevel]);
 
 	var functiontoexecute = loop;
