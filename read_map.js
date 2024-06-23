@@ -24,6 +24,8 @@ function read_map(map){
 
     // well define the id for each objects
     for (let i_object = 0; i_object < nb_objects; i_object++)  {
+        if (map.objects[i_object].x === undefined || map.objects[i_object].y === undefined || map.objects[i_object].player === undefined)
+            alert("niveau invalide !!!");
         if (map.objects[i_object].id === undefined)
             map.objects[i_object].id = 'new id -> ' + i_object.toString();
         if (map.objects[i_object].effect === undefined)

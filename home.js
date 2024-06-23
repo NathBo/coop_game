@@ -23,7 +23,7 @@ function main(){
 			this.color = color;
 			this.animation = 0;
 			this.state = 0;
-			if(this.type=="door"){
+			if(this.type=="door" || this.type=="look_door"){
 				if(this.state==1){collisions[this.player][this.x][this.y]='.';}
 				else{collisions[this.player][this.x][this.y]='#';}
 			}
@@ -54,6 +54,18 @@ function main(){
 		try_to_interact(player){
 			if((this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.interact(player);}
 		}
+
+		pick(player)    {
+		    console.assert(player.inventaire==null);
+		    player.inventaire = this;
+		    console.log(player.inventaire);
+		}
+
+    	try_to_pick(player){
+			if((this.x-player.x)**2+(this.y-player.y)**2<=0.5){this.pick(player);return true;}
+			return false;
+		}
+
 
 		afficher(){
 			let x = centers[this.player][0]+(this.x-camerax[this.player])*block_size;
@@ -97,6 +109,20 @@ function main(){
 					if((this.x-j.x)**2+(this.y-j.y)**2<=0.5){j.is_on_portal=true;}
 					else{j.is_on_portal=false;}
 					break;
+				case "look_door":
+					if(this.state==0){
+						ctx.fillStyle = this.color;
+						ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+					}
+					else{
+						ctx.strokeStyle = this.color;
+						ctx.strokeRect(x-block_size/2,y-block_size/2,block_size,block_size);
+					}
+				    break;
+				case "item":
+					ctx.fillStyle = this.color;
+					ctx.fillRect(x-block_size/2,y-block_size/2,block_size,block_size);
+    				break;
 			}
 		}
 	}
@@ -117,6 +143,7 @@ function main(){
 			this.gauche=0;this.droite=0;this.bas=0;this.haut=0;this.espace=0;this.item=0;
 			this.vitesse = 0.1;
 			this.is_on_portal = false;
+			this.inventaire=null;
 		}
 
 		reset(x,y){
@@ -147,6 +174,25 @@ function main(){
 				for(var i=0; i<objects[this.n].length; i++){
 					objects[this.n][i].try_to_interact(this);
 				}
+				if (this.inventaire != null)    {
+				    switch (this.inventaire.categoty)   {
+                        case "key":
+                            break;
+                    }
+                }
+
+			}
+			if(this.item==1){
+			    this.item==2;
+			    if (this.inventaire==null)  {
+			        for(var i=0; i<objects[this.n].length; i++){
+			            if (objects[this.n][i].type == "item" && objects[this.n][i].try_to_pick(this)) {
+			                objects[this.n].splice(i, 1);
+			                console.log(this);
+			                break;
+			            }
+			        }
+			    }
 			}
 			camerax[this.n] = Math.min(Math.max(this.x,vision_range-1.5),map.obstacles[this.n].length-vision_range);
 			cameray[this.n] = Math.min(Math.max(this.y,vision_range-2),map.obstacles[this.n][0].length-vision_range+1);
@@ -219,6 +265,20 @@ function main(){
 		ctx.fillRect(0,0,12,576);
 		ctx.fillRect(1024-12,0,12,576);
 		ctx.fillRect(500,0,24,576);
+		
+		for (let id_player=0; id_player<2; id_player++){
+		    let player = [j1,j2][id_player];
+			if (player.inventaire!=null)    {
+		        ctx.fillStyle = "black";
+
+		        if (id_player == 0)
+        		    ctx.fillRect(1024-60,576-60,1024,576);
+        	    else
+        		    ctx.fillRect(0,576-60,60,576);
+
+        	}
+		}
+	
 	}
 	
 	function loop(){
@@ -323,8 +383,8 @@ function main(){
 	var niveaux;
 	var collisions;
 	var objects = [[],[]];
-	var list_niveaux = [map0,map1,map2];
-	var currentlevel = 0;
+	var list_niveaux = [map0,map1,map2,map3];
+	var currentlevel = 3;
 	loadmap(list_niveaux[currentlevel]);
 
 	var functiontoexecute = loop;
